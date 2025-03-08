@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 # alias: 'n/a'
-# desc: fn_plugin description.
-# usage: fn_plugin.sh [args]
+# desc: Creates a floating terminal window in tmux with customizable size, appearance, and behavior.
 # flags: @WIP:0 @TODO:0 @FIXME:0 @BUG:0 @OPTIMIZE:0 @REFACTOR:0 @DEPRECATED:0
 
 declare -r _self_path_file_=$(readlink -f "$0")
