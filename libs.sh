@@ -30,6 +30,8 @@ DEFAULT_TITLE=''
 DEFAULT_SESSION_NAME='tmux-float-term-session'
 TMUX_FLOAT_TERM_WIDTH=$(fn_get_env TMUX_FLOAT_TERM_WIDTH)
 TMUX_FLOAT_TERM_HEIGHT=$(fn_get_env TMUX_FLOAT_TERM_HEIGHT)
+TMUX_FLOAT_TERM_MAX_WIDTH=$(fn_get_env TMUX_FLOAT_TERM_MAX_WIDTH)
+TMUX_FLOAT_TERM_MAX_HEIGHT=$(fn_get_env TMUX_FLOAT_TERM_MAX_HEIGHT)
 TMUX_FLOAT_TERM_BORDER_COLOR=$(fn_get_env TMUX_FLOAT_TERM_BORDER_COLOR)
 TMUX_FLOAT_TERM_TEXT_COLOR=$(fn_get_env TMUX_FLOAT_TERM_TEXT_COLOR)
 TMUX_FLOAT_TERM_CHANGE_PATH=$(fn_get_env TMUX_FLOAT_TERM_CHANGE_PATH)
@@ -72,6 +74,20 @@ fn_tmux_popup() {
   fi
 }
 
+fn_tmux_popup_maximized() {
+  if fn_is_tmux_version_supported; then
+    if ! fn_do_tmux_pop_maximized; then
+      tmux setenv -g TMUX_FLOAT_TERM_MAX_WIDTH "$(fn_get_final_opt '@tmux-float-term-max-width' '90%')" 
+      tmux setenv -g TMUX_FLOAT_TERM_MAX_HEIGHT "$(fn_get_final_opt '@tmux-float-term-max-height' '90%')"
+      fn_do_tmux_pop_maximized
+    fi
+  else
+    tmux display-message \
+      -d 2000 \
+      "requires tmux version 3.3 or newer"
+  fi
+}
+
 fn_do_tmux_pop() {
   TMUX_FLOAT_TERM_WIDTH=$(fn_get_env TMUX_FLOAT_TERM_WIDTH)
   TMUX_FLOAT_TERM_HEIGHT=$(fn_get_env TMUX_FLOAT_TERM_HEIGHT)
@@ -89,6 +105,29 @@ fn_do_tmux_pop() {
     -T "${TMUX_FLOAT_TERM_TITLE}" \
     -w "${TMUX_FLOAT_TERM_WIDTH}" \
     -h "${TMUX_FLOAT_TERM_HEIGHT}" \
+    -S fg="${TMUX_FLOAT_TERM_BORDER_COLOR}" \
+    -s fg="${TMUX_FLOAT_TERM_TEXT_COLOR}" \
+    -E \
+    "tmux attach-session -t \"${TMUX_FLOAT_TERM_SESSION_NAME}\""
+}
+
+fn_do_tmux_pop_maximized() {
+  TMUX_FLOAT_TERM_MAX_WIDTH=$(fn_get_env TMUX_FLOAT_TERM_MAX_WIDTH)
+  TMUX_FLOAT_TERM_MAX_HEIGHT=$(fn_get_env TMUX_FLOAT_TERM_MAX_HEIGHT)
+
+  TMUX_FLOAT_TERM_TITLE=$(fn_get_env TMUX_FLOAT_TERM_TITLE)
+  [ -z "${TMUX_FLOAT_TERM_TITLE}" ] && TMUX_FLOAT_TERM_TITLE="${DEFAULT_TITLE}"
+
+  TMUX_FLOAT_TERM_SESSION_NAME=$(fn_get_env TMUX_FLOAT_TERM_SESSION_NAME)
+  [ -z "${TMUX_FLOAT_TERM_SESSION_NAME}" ] && TMUX_FLOAT_TERM_SESSION_NAME="${DEFAULT_SESSION_NAME}"
+
+  tmux set-option -t "${TMUX_FLOAT_TERM_SESSION_NAME}" detach-on-destroy on
+
+  tmux popup \
+    -b rounded \
+    -T "${TMUX_FLOAT_TERM_TITLE}" \
+    -w "${TMUX_FLOAT_TERM_MAX_WIDTH}" \
+    -h "${TMUX_FLOAT_TERM_MAX_HEIGHT}" \
     -S fg="${TMUX_FLOAT_TERM_BORDER_COLOR}" \
     -s fg="${TMUX_FLOAT_TERM_TEXT_COLOR}" \
     -E \

@@ -17,9 +17,21 @@ declare -r _self_path_dir_=$(dirname "${_self_path_file_}")
 fn_plugin() {
   source "${_self_path_dir_}/libs.sh"
 
+  # Regular floating terminal toggle
   tmux bind-key $(fn_get_final_opt "@tmux-float-term-bind" "a") run-shell "${_self_path_dir_}/main.sh"
+
+  # Maximize floating terminal toggle
+  tmux bind-key $(fn_get_final_opt "@tmux-float-term-maximize-bind" "A") run-shell "${_self_path_dir_}/main.sh --maximize"
+
+  # Regular size configuration
   tmux setenv -g TMUX_FLOAT_TERM_WIDTH "$(fn_get_final_opt '@tmux-float-term-width' '60%')" 
   tmux setenv -g TMUX_FLOAT_TERM_HEIGHT "$(fn_get_final_opt '@tmux-float-term-height' '60%')" 
+
+  # Maximized size configuration
+  tmux setenv -g TMUX_FLOAT_TERM_MAX_WIDTH "$(fn_get_final_opt '@tmux-float-term-max-width' '90%')" 
+  tmux setenv -g TMUX_FLOAT_TERM_MAX_HEIGHT "$(fn_get_final_opt '@tmux-float-term-max-height' '90%')" 
+
+  # Other configuration
   tmux setenv -g TMUX_FLOAT_TERM_BORDER_COLOR "$(fn_get_final_opt '@tmux-float-term-border-color' 'grey')" 
   tmux setenv -g TMUX_FLOAT_TERM_TEXT_COLOR "$(fn_get_final_opt '@tmux-float-term-text-color' 'white')" 
   tmux setenv -g TMUX_FLOAT_TERM_TITLE "$(fn_get_final_opt '@tmux-float-term-title' "${DEFAULT_TITLE}")"
