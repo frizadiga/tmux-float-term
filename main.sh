@@ -18,6 +18,12 @@ declare -r _self_path_dir_=$(dirname "${_self_path_file_}")
 fn_main() {
   source "${_self_path_dir_}/libs.sh"
 
+  # Check if maximize mode is requested
+  local maximize_mode=false
+  if [ "$1" = "--maximize" ]; then
+    maximize_mode=true
+  fi
+
   tmux setenv -g ORIGIN_SESSION "$(tmux display -p '#{session_name}')"
 
   if [ "$(tmux display-message -p '#{session_name}')" = "${TMUX_FLOAT_TERM_SESSION_NAME}" ]; then
@@ -35,12 +41,20 @@ fn_main() {
   else
     # is the floating session exists
     if tmux has-session -t "${TMUX_FLOAT_TERM_SESSION_NAME}" 2>/dev/null; then
-      fn_tmux_popup
+      if [ "$maximize_mode" = true ]; then
+        fn_tmux_popup_maximized
+      else
+        fn_tmux_popup
+      fi
     else
       # create a new special session and attach to it
       tmux new-session -d -c "$(tmux display-message -p '#{pane_current_path}')" -s "${TMUX_FLOAT_TERM_SESSION_NAME}"
       tmux set-option -t "${TMUX_FLOAT_TERM_SESSION_NAME}" status off
-      fn_tmux_popup
+      if [ "$maximize_mode" = true ]; then
+        fn_tmux_popup_maximized
+      else
+        fn_tmux_popup
+      fi
     fi
   fi
 }
