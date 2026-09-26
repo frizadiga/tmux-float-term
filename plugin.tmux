@@ -24,12 +24,12 @@ fn_plugin() {
   tmux bind-key $(fn_get_final_opt "@tmux-float-term-maximize-bind" "A") run-shell "${_self_path_dir_}/main.sh --maximize"
 
   # Regular size configuration
-  tmux setenv -g TMUX_FLOAT_TERM_WIDTH "$(fn_get_final_opt '@tmux-float-term-width' '90%')" 
-  tmux setenv -g TMUX_FLOAT_TERM_HEIGHT "$(fn_get_final_opt '@tmux-float-term-height' '90%')" 
+  tmux setenv -g TMUX_FLOAT_TERM_WIDTH "$(fn_get_final_opt '@tmux-float-term-width' '66%')" 
+  tmux setenv -g TMUX_FLOAT_TERM_HEIGHT "$(fn_get_final_opt '@tmux-float-term-height' '66%')" 
 
   # Maximized size configuration
-  tmux setenv -g TMUX_FLOAT_TERM_MAX_WIDTH "$(fn_get_final_opt '@tmux-float-term-max-width' '100%')" 
-  tmux setenv -g TMUX_FLOAT_TERM_MAX_HEIGHT "$(fn_get_final_opt '@tmux-float-term-max-height' '100%')" 
+  tmux setenv -g TMUX_FLOAT_TERM_MAX_WIDTH "$(fn_get_final_opt '@tmux-float-term-max-width' '90%')" 
+  tmux setenv -g TMUX_FLOAT_TERM_MAX_HEIGHT "$(fn_get_final_opt '@tmux-float-term-max-height' '90%')" 
 
   # Other configuration
   tmux setenv -g TMUX_FLOAT_TERM_BORDER_COLOR "$(fn_get_final_opt '@tmux-float-term-border-color' 'grey')" 
